@@ -5,6 +5,7 @@ import { insert, update, read, remove } from '../services/apiService';
 
 const Student = ({match, history}) => {
 
+
    const [id] = useState(match.params.id);
    const [student, setStudent] = useState({
        _id: '0',
@@ -13,6 +14,9 @@ const Student = ({match, history}) => {
        yearOfBirth: 0,
        address: ''
    });
+
+    const firstNameEmpty = student.firstName === null || student.firstName === '';
+    const lastNameEmpty = student.lastName === null || student.lastName === '';
 
    useEffect(() => {
        if(id !== '0'){
@@ -31,12 +35,16 @@ const Student = ({match, history}) => {
        });
 }
 
-
    const back = () => {
        history.push('/students');
    }
 
    const save = () => {
+       if(student.firstName === '' || student.lastName === '') {
+            alert('Some of required fields are empty!');
+            return;
+       }
+
        if(id === '0') {
            insert('students', student, data => {
             if(data) return history.push('/students');
@@ -71,7 +79,8 @@ const Student = ({match, history}) => {
                     value={student.firstName}
                     onChange={changeHandler}              
                      required/>
-                     
+
+                     {firstNameEmpty && <div style={{color: 'red', fontSize: '12px'}}>this field is required!</div>}
           </div>
         
           <div style={{margin: '12px 0'}}>
@@ -82,6 +91,8 @@ const Student = ({match, history}) => {
                     onChange={changeHandler}
                     required
                     />
+
+                    {lastNameEmpty && <div style={{color: 'red', fontSize: '12px'}}>this field is required!</div>}
           </div>
           <div style={{margin: '12px 0'}}>
              <label htmlFor='yearOfBirth'>Year of Birth: </label>

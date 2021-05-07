@@ -10,6 +10,11 @@ const Course = ({match, history}) => {
        points: 0
    });
 
+   const nameEmpty = course.name === null || course.name === '';
+   const pointsEmpty = course.points === null || course.points === '';
+
+
+
    useEffect(() => {
        if(id !== '0'){
            read('courses', id, data => {
@@ -30,6 +35,11 @@ const Course = ({match, history}) => {
    }
 
    const save = () => {
+     if(course.firstName === '' || course.lastName === '') {
+        alert('Some of required fields are empty!');
+        return;
+      }
+
        if(id === '0') {
            insert('courses', course, data => {
             if(data) return history.push('/courses');
@@ -59,14 +69,18 @@ const Course = ({match, history}) => {
                     name='name'
                     value={course.name}
                     onChange={changeHandler} />
+                    {nameEmpty && <div style={{color: 'red', fontSize: '12px'}}>this field is required!</div>}
           </div>
+
           <div style={{margin: '12px 0'}}>
              <label htmlFor='points'>Course points: </label>
              <input type='text'
                     name='points'
                     value={course.points}
                     onChange={changeHandler} />
+                    {pointsEmpty && <div style={{color: 'red', fontSize: '12px'}}>this field is required!</div>}
           </div>
+
           <hr />
           {id !== '0' && (
           <div className='left'>
